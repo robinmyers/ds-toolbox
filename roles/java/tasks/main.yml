@@ -6,19 +6,21 @@
   set_fact:
     java_path: "{{ vars['java'][java.type]['path'] }}"
 
-- name: Add WebUpd8 Apt repo
-  apt_repository:
-    repo: '{{ java.oracle.repo }}'
-    state: present
-    update_cache: yes
-  when: java.type == 'oracle'
+- block:
 
-- name: Accept Oracle Java License
-  debconf:
-    name: '{{ java.oracle.package }}'
-    question: 'shared/accepted-oracle-license-v1-1'
-    vtype: 'select'
-    value: 'true'
+    - name: Add WebUpd8 Apt repo
+      apt_repository:
+        repo: '{{ java.oracle.repo }}'
+        state: present
+        update_cache: yes
+
+    - name: Accept Oracle Java License
+      debconf:
+        name: '{{ java.oracle.package }}'
+        question: 'shared/accepted-oracle-license-v1-1'
+        vtype: 'select'
+        value: 'true'
+
   when: java.type == 'oracle'
 
 - name: Install Java
