@@ -1,2 +1,22 @@
-- name: Ping all servers
-  ping:
+- name: Update Apt Cache
+  apt: update_cache=yes cache_valid_time=3600
+
+- name: Install Dependencies
+  apt: name={{item}} state=latest
+  with_items:
+    - git
+    - vim
+    - libcurl4-openssl-dev
+    - libssl-dev
+    - libxml2-dev
+
+- name: Create Application and Data Directories
+  file: 
+    path: '{{item}}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+  with_items:
+    - /apps
+    - /data
