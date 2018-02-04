@@ -1,0 +1,3 @@
+---
+java_type: 'oracle' # 'openjdk'
+java_version: '8'

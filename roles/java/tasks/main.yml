@@ -1,17 +1,34 @@
+# - name: Define java_package for oracle
+#   set_fact:
+#     java_package: '{{ java.oracle.package }}'
+#   when: java.type == 'oracle'
+
+# - name: Define java_package for openjdk
+#   set_fact:
+#     java_package: '{{ java.openjdk.package }}'
+#   when: java.type == 'openjdk'
+
+- name: Define java_package
+  set_fact:
+    java_package: "{{ vars['java'][java.type]['package'] }}"
+
 - name: Add WebUpd8 Apt repo
   apt_repository:
-    repo: 'ppa:webupd8team/java'
+    repo: '{{ java.oracle.repo }}'
     state: present
     update_cache: yes
+  when: java.type == 'oracle'
 
 - name: Accept Oracle Java License
   debconf:
-    name: 'oracle-java8-installer'
+    #name: 'oracle-java8-installer'
+    name: '{{ java.oracle.package }}'
     question: 'shared/accepted-oracle-license-v1-1'
     vtype: 'select'
     value: 'true'
+  when: java.type == 'oracle'
 
-- name: Install 
+- name: Install Java
   apt:
-    name: 'oracle-java8-installer'
+    name: '{{ java_package }}'
     state: installed
