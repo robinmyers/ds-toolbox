@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Deploy Data Sceince Toolbox
+  hosts: all
   become: True
   gather_facts: False
   pre_tasks:
