@@ -1,3 +1,4 @@
 ---
 java_type: 'oracle' # 'openjdk'
 java_version: '8'
+java_dir: '/apps/java'

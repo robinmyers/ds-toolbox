@@ -3,9 +3,9 @@ java:
   type: '{{ java_type }}'
   version: '{{ java_version }}'
   openjdk:
-    package: default-jdk
-#    path: /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+    package: 'default-jdk'
+    path: '/usr/lib/jvm/java-{{ java_version }}-openjdk-amd64'
   oracle:
     repo: 'ppa:webupd8team/java'
-    package: oracle-java{{ java_version }}-installer
-#    path: /usr/lib/jvm/java-8-oracle
+    package: 'oracle-java{{ java_version }}-installer'
+    path: '/usr/lib/jvm/java-{{ java_version }}-oracle'

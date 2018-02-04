@@ -1,16 +1,10 @@
-# - name: Define java_package for oracle
-#   set_fact:
-#     java_package: '{{ java.oracle.package }}'
-#   when: java.type == 'oracle'
-
-# - name: Define java_package for openjdk
-#   set_fact:
-#     java_package: '{{ java.openjdk.package }}'
-#   when: java.type == 'openjdk'
-
 - name: Define java_package
   set_fact:
     java_package: "{{ vars['java'][java.type]['package'] }}"
+
+- name: Define java_path
+  set_fact:
+    java_path: "{{ vars['java'][java.type]['path'] }}"
 
 - name: Add WebUpd8 Apt repo
   apt_repository:
@@ -21,7 +15,6 @@
 
 - name: Accept Oracle Java License
   debconf:
-    #name: 'oracle-java8-installer'
     name: '{{ java.oracle.package }}'
     question: 'shared/accepted-oracle-license-v1-1'
     vtype: 'select'
@@ -32,3 +25,16 @@
   apt:
     name: '{{ java_package }}'
     state: installed
+
+- name: Create app directory link
+  file:
+    src: '{{ java_path }}'
+    dest: '{{ java_dir }}'
+    state: link
+    owner: vagrant
+    group: vagrant
+
+- name: Add Java environment configuration file
+  template:
+    src: env-java.sh.j2
+    dest: /etc/profile.d/env-java.sh
