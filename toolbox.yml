@@ -12,6 +12,5 @@
     - name: Gathering facts
       setup: 
 
-  tasks:
-    - name: Ping all servers
-      ping:
+  roles:
+    - common
