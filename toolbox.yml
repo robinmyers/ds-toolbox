@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: True
+  gather_facts: False
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt update && apt install -y python-simplejson)
+      register: test
+      changed_when: test.stdout
+
+    - name: Gathering facts
+      setup: 
+
+  tasks:
+    - name: Ping all servers
+      ping:
