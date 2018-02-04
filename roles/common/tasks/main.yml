@@ -18,5 +18,5 @@
     group: vagrant
     mode: 0755
   with_items:
-    - /apps
-    - /data
+    - '{{ dst_app_dir }}'
+    - '{{ dst_data_dir }}'
