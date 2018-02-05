@@ -1,5 +1,5 @@
 ---
-- name: Deploy Data Sceince Toolbox
+- name: Deploy Data Science Toolbox
   hosts: all
   become: True
   gather_facts: False
