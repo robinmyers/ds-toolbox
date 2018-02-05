@@ -28,13 +28,19 @@
     name: '{{ java_package }}'
     state: installed
 
-- name: Create app directory link
+- name: Create Java directory
   file:
-    src: '{{ java_path }}'
-    dest: '{{ java_dir }}'
-    state: link
+    path: '{{ java_dir }}'
+    state: directory
     owner: vagrant
     group: vagrant
+    mode: 0755
+
+- name: Create current link
+  file:
+    src: '{{ java_path }}'
+    dest: '{{ java_dir }}/current'
+    state: link
 
 - name: Add Java environment configuration file
   template:
