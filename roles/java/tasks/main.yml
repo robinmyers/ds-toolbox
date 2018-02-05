@@ -40,3 +40,14 @@
   template:
     src: env-java.sh.j2
     dest: /etc/profile.d/env-java.sh
+
+- name: Move Oracle Java environment files
+  command: mv {{ item }} {{ item }}.bak
+  args:
+    chdir: /etc/profile.d
+    creates: '/etc/profile.d/{{ item }}.bak'
+    removes: '/etc/profile.d/{{ item }}'
+  with_items:
+    - jdk.sh
+    - jdk.csh
+  when: java.type == 'oracle'
