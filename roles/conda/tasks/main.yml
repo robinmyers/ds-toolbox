@@ -1,0 +1,44 @@
+- name: Check if Conda is already installed
+  stat:
+    path: '{{ conda_install_dir }}/bin/conda'
+  register: conda_installed
+  changed_when: false
+
+- block:
+
+    - name: Download Conda install script
+      get_url:
+        url: '{{ conda_url }}'
+        dest: '/tmp/{{ conda_script }}'
+        mode: 0755
+
+    - name: Create Conda directory
+      file:
+        path: '{{ conda_dir }}'
+        state: directory
+        owner: vagrant
+        group: vagrant
+        mode: 0755
+
+    - name: Install Conda
+      command: /tmp/{{ conda_script }} -b -p {{ conda_install_dir }}
+      args:
+        creates: '{{ conda_install_dir }}'
+
+  when: not conda_installed.stat.exists 
+
+- name: Remove Conda install script
+  file:
+    path: '/tmp/{{ conda_script }}'
+    state: absent
+
+- name: Create current link
+  file:
+    src: '{{ conda_install_dir }}'
+    dest: '{{ conda_dir }}/current'
+    state: link
+
+- name: Add Conda environment configuration file
+  template:
+    src: env-conda.sh.j2
+    dest: /etc/profile.d/env-conda.sh

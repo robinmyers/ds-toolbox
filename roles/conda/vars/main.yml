@@ -1,0 +1,8 @@
+---
+conda_platform: '{{ ansible_system }}-{{ ansible_machine }}'
+conda_name: '{{ conda_type }}{{ conda_python_version }}-{{ conda_version }}-{{ conda_platform }}'
+conda_script: '{{ conda_name }}.sh'
+conda_install_dir: '{{ conda_dir }}/{{ conda_name }}'
+conda_mirror: 'https://repo.continuum.io'
+conda_mirror_dir: "{{ 'miniconda' if conda_type == 'Miniconda' else 'archive' }}"
+conda_url: '{{ conda_mirror }}/{{ conda_mirror_dir }}/{{ conda_script }}'
