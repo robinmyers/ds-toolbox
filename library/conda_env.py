@@ -1,86 +1,121 @@
 #!/usr/bin/python
 
+import os
 import json
-import re
 from ansible.module_utils.basic import *
 
-def get_conda(module):
-	return module.get_bin_path('conda', required=True)
+def get_conda(module, executable):
+	'''Return the path to the conda executable'''
 
-def conda_env_exists(module, conda):
+	# Check for conda executable on the PATH
+	# else, check the defualt path in the user's home directory
+	candidate_paths = ('conda', '~/anaconda/bin/conda', '~/anaconda3/bin/conda')
+
+	if executable is not None:
+		# If the path is to the base directory, add the path to the exectuable
+		if os.path.isdir(executable):
+			executable = os.path.join(executable, 'bin', 'conda')
+
+		candidate_paths = (executable,)
+
+	for path in candidate_paths:
+		conda = module.get_bin_path(path, required=False)
+		if conda is not None:
+			break
+	else:
+		module.fail_json(
+			msg='Unable to find the conda exectuable in: {}'.format(','.join(candidate_paths))
+		)
+
+	return conda
+
+
+def get_envs(module, conda):
+	'''Return a list of the available environment names'''
 	cmd = [conda, 'env', 'list', '--json']
 	(rc, stdout, stderr) = module.run_command(cmd)
 
-	r = re.compile('.*/{0}$'.format(module.params['name']))
-	envs = json.loads(stdout)['envs']
+	stdout = json.loads(stdout)
+	envs = [os.path.basename(env) for env in stdout['envs']]
 
-	return any([r.match(env) for env in envs])
+	return envs
 
-def conda_create_env(module, conda, name, python, packages):
-	env_exists = conda_env_exists(module, conda)
 
-	if env_exists:
-		return True, False, {'msg': 'Environment {0} already exists'.format(name) }
+def env_exists(module, conda, name):
+	'''Return whether or not the environment exists'''
+	envs = get_envs(module, conda)
+	return name in envs
 
-	cmd = [conda, 'create', '-y', '-n', name, '--json']
+def create_env(module, conda, name, python, packages):
+	'''Create the environment if it doesn't already exist'''
+
+	if env_exists(module, conda, name):
+		return False, False, 'Environment {} already exists'.format(name)
+	
+	cmd = [conda, 'create', '-y', '-n', name, '--json', 'hkjahdfakj']
 
 	if python:
-		cmd.append('python={0}'.format(python))
+		cmd.append('python={}'.format(python))
 
 	if packages:
 		cmd.extend(packages)
 
 	(rc, stdout, stderr) = module.run_command(cmd)
 
-	if rc == 0:
-		return True, True, {'data': stdout }
+	if rc != 0:
+		return True, False, stderr
 	else:
-		return False, False, {'data': stderr }
+		return False, True, json.loads(stdout)
 
-def conda_remove_env(module, conda, name):
-	env_exists = conda_env_exists(module, conda)
 
-	if not env_exists:
-		return True, False, {'msg': 'Environment {0} does not exist'.format(name) }
+def remove_env(module, conda, name):
+	'''Remove the environment if it exists'''
+
+	if not env_exists(module, conda, name):
+		return False, False, 'Environment {0} does not exist'.format(name)
 
 	cmd = [conda, 'env', 'remove', '-y', '-n', name, '--json']
 	(rc, stdout, stderr) = module.run_command(cmd)
 
-	if rc == 0:
-		return True, True, {'data': stdout }
+	if rc != 0:
+		return True, False, stderr
 	else:
-		return False, False, {'data': stderr }
+		return False, True, json.loads(stdout)
+
 
 def main():
 
-	module = AnsibleModule(argument_spec={
-		'name': {'required': True, 'type': 'str'},
-		'python': {'default': None, 'type': 'str'},
-		'packages': {'default': None, 'type': 'list'},
-		#'file': {'default': None, 'type': 'str'},
-		'state': {
-			'default': 'present',
-			'choices': ['present', 'absent'],
-			'type': 'str'
-		}
-	})
+	module = AnsibleModule(
+		argument_spec=dict(
+			name=dict(required=True),
+			python=dict(required=False, default=None),
+			packages=dict(required=False, default=None, type='list'),
+			executable=dict(required=False, default=None, aliases=['path']),
+			state=dict(
+				required=False,
+				default='present',
+				choices=['present', 'absent']
+			)
+		)
+	)
 
-	conda = get_conda(module)
 	name = module.params['name']
 	python = module.params['python']
 	packages = module.params['packages']
+	executable = module.params['executable']
 	state = module.params['state']
 
+	conda = get_conda(module, executable)
+
 	if state == 'present':
-		success, has_changed, result = conda_create_env(module, conda, name, python, packages)
+		failed, changed, msg = create_env(module, conda, name, python, packages)
+	elif state == 'absent':
+		failed, changed, msg = remove_env(module, conda, name)
 
-	if state == 'absent':
-		success, has_changed, result = conda_remove_env(module, conda, name)
-
-	if success:
-		module.exit_json(changed=has_changed, meta=result)
+	if not failed:
+		module.exit_json(changed=changed, msg=msg, executable=conda)
 	else:
-		module.fail_json(msg='conda failed', meta=result)
+		module.fail_json(msg=msg)
 
 if __name__ == '__main__':
 	main()
