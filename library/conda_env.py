@@ -46,6 +46,7 @@ def env_exists(module, conda, name):
 	envs = get_envs(module, conda)
 	return name in envs
 
+
 def create_env(module, conda, name, python, packages):
 	'''Create the environment if it doesn't already exist'''
 
@@ -63,7 +64,7 @@ def create_env(module, conda, name, python, packages):
 	(rc, stdout, stderr) = module.run_command(cmd)
 
 	if rc != 0:
-		return True, False, stderr
+		return True, False, json.loads(stdout)['messages']
 	else:
 		return False, True, json.loads(stdout)
 
@@ -78,7 +79,7 @@ def remove_env(module, conda, name):
 	(rc, stdout, stderr) = module.run_command(cmd)
 
 	if rc != 0:
-		return True, False, stderr
+		return True, False, json.loads(stdout)['messages']
 	else:
 		return False, True, json.loads(stdout)
 
@@ -116,6 +117,7 @@ def main():
 		module.exit_json(changed=changed, msg=msg, executable=conda)
 	else:
 		module.fail_json(msg=msg)
+
 
 if __name__ == '__main__':
 	main()
