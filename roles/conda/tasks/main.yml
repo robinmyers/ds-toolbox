@@ -43,8 +43,15 @@
     src: env-conda.sh.j2
     dest: /etc/profile.d/env-conda.sh
 
+- name: Install packages into root environment
+  conda_pkg:
+    name: 'ipython'
+    path: '{{ conda_install_dir }}'
+    state: 'present'
+
 - name: Create Conda environment
   conda_env:
     name: '{{ conda_env }}'
-    executable: '{{ conda_dir }}/current'
+    path: '{{ conda_install_dir }}'
     state: 'present'
+
