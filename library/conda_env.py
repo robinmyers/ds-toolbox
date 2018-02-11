@@ -52,7 +52,7 @@ def create_env(module, conda, name, python, packages):
 	if env_exists(module, conda, name):
 		return False, False, 'Environment {} already exists'.format(name)
 	
-	cmd = [conda, 'create', '-y', '-n', name, '--json', 'hkjahdfakj']
+	cmd = [conda, 'create', '-y', '-n', name, '--json']
 
 	if python:
 		cmd.append('python={}'.format(python))
