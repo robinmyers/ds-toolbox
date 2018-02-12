@@ -4,3 +4,10 @@ conda_version: 'latest'
 conda_python_version: '3'
 conda_dir: '{{ dst_app_dir }}/anaconda'
 conda_env: 'ds-toolbox'
+conda_pkgs:
+  - numpy
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - ipython
+  - jupyter

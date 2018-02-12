@@ -27,6 +27,15 @@
 
   when: not conda_installed.stat.exists 
 
+- name: Update Conda install directory owner
+  file:
+    path: '{{ conda_install_dir }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    recurse: yes
+    mode: 0755
+
 - name: Remove Conda install script
   file:
     path: '/tmp/{{ conda_script }}'
@@ -37,6 +46,8 @@
     src: '{{ conda_install_dir }}'
     dest: '{{ conda_dir }}/current'
     state: link
+    group: vagrant
+    owner: vagrant
 
 - name: Add Conda environment configuration file
   template:
@@ -47,11 +58,15 @@
   conda_pkg:
     name: 'ipython'
     path: '{{ conda_install_dir }}'
-    state: 'present'
 
 - name: Create Conda environment
   conda_env:
     name: '{{ conda_env }}'
     path: '{{ conda_install_dir }}'
-    state: 'present'
 
+- name: Install packages in Conda environment
+  conda_pkg:
+    name: '{{ item }}'
+    env: '{{ conda_env }}'
+    path:  '{{ conda_install_dir }}'
+  with_items: '{{ conda_pkgs }}'
