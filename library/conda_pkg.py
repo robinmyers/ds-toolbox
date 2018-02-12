@@ -78,7 +78,7 @@ def install_package(module, conda, env, name, version, channel):
 	if package_exists(module, conda, env, name, version):
 		return False, False, 'Package {} already installed'.format(name, version)
 
-	cmd = [conda, 'install', '-y', '--json']
+	cmd = [conda, 'install', '-y', '-q', '--json']
 
 	if env is not None:
 		cmd.extend(['-n', env])
@@ -96,6 +96,7 @@ def install_package(module, conda, env, name, version, channel):
 	if rc != 0:
 		return True, False, json.loads(stdout)['message']
 	else:
+		#return False, True, json.loads(stdout)
 		return False, True, json.loads(stdout)
 
 
@@ -104,7 +105,7 @@ def remove_package(module, conda, env, name):
 	if not package_exists(module, conda, env, name, None):
 		return False, False, 'Package {} is not installed'.format(name)
 
-	cmd = [conda, 'remove', '-y', '--json', name]
+	cmd = [conda, 'remove', '-y', '-q', '--json', name]
 
 	if env is not None:
 		cmd.extend(['-n', env])

@@ -27,32 +27,10 @@
 
   when: not conda_installed.stat.exists 
 
-- name: Update Conda install directory owner
-  file:
-    path: '{{ conda_install_dir }}'
-    state: directory
-    owner: vagrant
-    group: vagrant
-    recurse: yes
-    mode: 0755
-
 - name: Remove Conda install script
   file:
     path: '/tmp/{{ conda_script }}'
     state: absent
-
-- name: Create current link
-  file:
-    src: '{{ conda_install_dir }}'
-    dest: '{{ conda_dir }}/current'
-    state: link
-    group: vagrant
-    owner: vagrant
-
-- name: Add Conda environment configuration file
-  template:
-    src: env-conda.sh.j2
-    dest: /etc/profile.d/env-conda.sh
 
 - name: Install packages into root environment
   conda_pkg:
@@ -70,3 +48,26 @@
     env: '{{ conda_env }}'
     path:  '{{ conda_install_dir }}'
   with_items: '{{ conda_pkgs }}'
+
+- name: Update Conda install directory owner
+  file:
+    path: '{{ conda_install_dir }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    recurse: yes
+    mode: 0755
+
+- name: Create current link
+  file:
+    src: '{{ conda_install_dir }}'
+    dest: '{{ conda_dir }}/current'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Add Conda environment configuration file
+  template:
+    src: env-conda.sh.j2
+    dest: /etc/profile.d/env-conda.sh
+
