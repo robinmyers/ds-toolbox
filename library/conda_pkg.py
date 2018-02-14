@@ -73,6 +73,13 @@ def package_exists(module, conda, env, name, version):
 		return (name, version) in packages
 
 
+def parse_conda_output(output):
+	output = output.strip().split('\x00')
+	output = json.loads(output[-1])
+
+	return output
+
+
 def install_package(module, conda, env, name, version, channel):
 	'''Install package if it doesn't exist or is at a different version'''
 	if package_exists(module, conda, env, name, version):
@@ -94,10 +101,9 @@ def install_package(module, conda, env, name, version, channel):
 	(rc, stdout, stderr) = module.run_command(cmd)
 
 	if rc != 0:
-		return True, False, json.loads(stdout)['message']
+		return True, False, parse_conda_output(stdout)['message']
 	else:
-		#return False, True, json.loads(stdout)
-		return False, True, json.loads(stdout)
+		return False, True, parse_conda_output(stdout)
 
 
 def remove_package(module, conda, env, name):
@@ -113,9 +119,9 @@ def remove_package(module, conda, env, name):
 	(rc, stdout, stderr) = module.run_command(cmd)
 
 	if rc != 0:
-		return True, False, stderr
+		return True, False, parse_conda_output(stdout)['message']
 	else:
-		return False, True, json.loads(stdout)
+		return False, True, parse_conda_output(stdout)
 
 
 def main():
