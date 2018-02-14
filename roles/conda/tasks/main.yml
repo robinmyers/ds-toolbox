@@ -49,6 +49,13 @@
     path:  '{{ conda_install_dir }}'
   with_items: '{{ conda_pkgs }}'
 
+- name: Install pip packages in Conda environment
+  pip: 
+    name: '{{ item }}'
+    executable: '{{ conda_env_dir}}/bin/pip'
+  with_items: '{{ conda_pip_pkgs }}'
+  when: not conda_pip_pkgs is none
+
 - name: Update Conda install directory owner
   file:
     path: '{{ conda_install_dir }}'

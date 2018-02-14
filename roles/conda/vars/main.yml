@@ -6,3 +6,4 @@ conda_install_dir: '{{ conda_dir }}/{{ conda_name }}'
 conda_mirror: 'https://repo.continuum.io'
 conda_mirror_dir: "{{ 'miniconda' if conda_type == 'Miniconda' else 'archive' }}"
 conda_url: '{{ conda_mirror }}/{{ conda_mirror_dir }}/{{ conda_script }}'
+conda_env_dir: '{{ conda_dir }}/{{ conda_name }}/envs/{{ conda_env }}'

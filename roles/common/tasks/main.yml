@@ -9,6 +9,7 @@
     - libcurl4-openssl-dev
     - libssl-dev
     - libxml2-dev
+    - build-essential
 
 - name: Create Application and Data Directories
   file: 
