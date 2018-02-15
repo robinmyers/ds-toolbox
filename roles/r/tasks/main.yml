@@ -1,0 +1,53 @@
+- name: Add R Key
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: E298A3A825C0D65DFD57CBB651716619E084DAB9
+
+- name: Add R apt repository
+  apt_repository:
+    repo: deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu {{ ansible_lsb.codename }}/
+    state: present
+
+- name: Install R
+  apt: 
+    name: '{{ item }}'
+    state: latest
+    update_cache: yes
+  with_items:
+    - r-base
+    - r-base-dev
+
+- name: Create R directories
+  file:
+    path: '{{ r_dir }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Get R_HOME
+  command: R RHOME
+  changed_when: false
+  register: get_install_dir
+
+- name: Set r_install_dir
+  set_fact:
+    r_install_dir: '{{ get_install_dir.stdout }}'
+
+- name: Create R link
+  file:
+    src: '{{ r_install_dir }}'
+    dest: '{{ r_home }}'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Create Renviron.site
+  template:
+    src: Renviron.site
+    dest: '{{ r_home }}/etc/Renviron.site'
+
+- name: Create Rprofile.site
+  template:
+    src: Rprofile.site
+    dest: '{{ r_home }}/etc/Rprofile.site'

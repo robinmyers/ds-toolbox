@@ -1,0 +1,2 @@
+---
+r_home: '{{ r_dir }}/current'

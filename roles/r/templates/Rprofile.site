@@ -1,0 +1,5 @@
+local({
+	r <- getOption('repos')
+	r['CRAN'] <- '{{ r_cran }}'
+	options(repos = r)
+})

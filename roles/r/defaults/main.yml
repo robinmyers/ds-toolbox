@@ -1,0 +1,3 @@
+---
+r_dir: '{{ dst_app_dir }}/R'
+r_cran: 'https://cran.rstudio.com'
