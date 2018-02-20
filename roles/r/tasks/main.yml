@@ -17,6 +17,12 @@
     - r-base
     - r-base-dev
 
+- name: Install R packages
+  cran_pkg:
+    name: '{{ item }}'
+    repo: '{{ r_cran }}'
+  with_items: '{{ r_pkgs }}'
+
 - name: Create R directories
   file:
     path: '{{ r_dir }}'
@@ -25,7 +31,7 @@
     group: vagrant
     mode: 0755
 
-- name: Get R_HOME
+- name: Get R installation directory
   command: R RHOME
   changed_when: false
   register: get_install_dir
@@ -44,10 +50,15 @@
 
 - name: Create Renviron.site
   template:
-    src: Renviron.site
+    src: Renviron.site.j2
     dest: '{{ r_home }}/etc/Renviron.site'
 
 - name: Create Rprofile.site
   template:
-    src: Rprofile.site
+    src: Rprofile.site.j2
     dest: '{{ r_home }}/etc/Rprofile.site'
+
+- name: Add R environment configuration file
+  template:
+    src: env-r.sh.j2
+    dest: /etc/profile.d/env-r.sh
