@@ -31,9 +31,21 @@ def get_rscript(module, executable):
 	return r
 
 
+def error_wrapper(r_cmd):
+	'''Wrap an R command in error-handling/exit code and return new cmd'''
+	cmd = (
+		'tryCatch({},'
+		'warning = function(w) {{ cat(message(w), stderr()); quit("no", 1, F) }},'
+		'error = function(e) {{ cat(message(e), stderr()); quit("no", 1, F) }})'
+	).format(r_cmd)
+
+	return cmd
+
+
 def run_r_command(module, rscript, r_cmd):
-	# cmd = [r, '--vanilla', '-e', "'{}'".format(r_cmd)]
-	cmd = [rscript, '--vanilla', '-e', r_cmd]
+	'''Run R command and return system information'''
+	r_cmd = error_wrapper(r_cmd)
+	cmd = [rscript, '-e', r_cmd]
 	
 	(rc, stdout, stderr) = module.run_command(cmd)
 
@@ -89,11 +101,12 @@ def install_package(module, rscript, name, lib, repo):
 	lib = get_default_lib(module, rscript) if lib is None else lib
 	repo = get_default_repo(module, rscript) if repo is None else repo
 
-	r_cmd = 'tryCatch(install.packages("{name}", lib="{lib}", repos="{repos}"), warning = function(w) stop(w))'.format(
+	r_cmd = 'install.packages("{name}", lib="{lib}", repos="{repos}")'.format(
 		name = name,
 		lib = lib,
 		repos = repo
 	)
+
 
 	(rc, stdout, stderr) = run_r_command(module, rscript, r_cmd)
 

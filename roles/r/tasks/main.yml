@@ -17,12 +17,6 @@
     - r-base
     - r-base-dev
 
-- name: Install R packages
-  cran_pkg:
-    name: '{{ item }}'
-    repo: '{{ r_cran }}'
-  with_items: '{{ r_pkgs }}'
-
 - name: Create R directories
   file:
     path: '{{ r_dir }}'
@@ -47,6 +41,13 @@
     state: link
     group: vagrant
     owner: vagrant
+
+- name: Install R packages
+  cran_pkg:
+    name: '{{ item }}'
+    lib: '{{ r_home }}/site-library'
+    repo: '{{ r_cran }}'
+  with_items: '{{ r_pkgs }}'
 
 - name: Create Renviron.site
   template:
