@@ -1,0 +1,51 @@
+- name: Download and Install RStudio Server
+  apt:
+    deb: '{{ rstudio_pkg_url }}'
+    state: 'present'
+
+- name: Create RStudio directories
+  file:
+    path: '{{ rstudio_home }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Link RStudio sbin directory
+  file:
+    src: '{{ rstudio_bin_dir }}'
+    dest: '{{ rstudio_home }}/sbin'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Link RStudio conf directory
+  file:
+    src: '{{ rstudio_conf_dir }}'
+    dest: '{{ rstudio_home }}/conf'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Link RStudio lib directory
+  file:
+    src: '{{ rstudio_lib_dir }}'
+    dest: '{{ rstudio_home }}/lib'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Link RStudio log directory
+  file:
+    src: '{{ rstudio_log_dir }}'
+    dest: '{{ rstudio_home }}/log'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Create RStudio configuration
+  template:
+    src: rserver.conf.j2
+    dest: '{{ rstudio_conf_dir }}/rserver.conf'
+  notify: 
+    - restart rstudio
