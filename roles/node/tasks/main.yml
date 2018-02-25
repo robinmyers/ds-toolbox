@@ -1,0 +1,8 @@
+---
+- name: Install Node and NPM
+  apt: 
+    name: '{{ item }}'
+    state: latest
+  with_items:
+    - nodejs-legacy
+    - npm
