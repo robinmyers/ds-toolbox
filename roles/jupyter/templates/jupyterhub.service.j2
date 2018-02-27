@@ -1,0 +1,10 @@
+[Unit]
+Description=Jupyterhub
+
+[Service]
+User=root
+Environment="PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/apps/anaconda/current/bin"
+ExecStart=/apps/anaconda/current/bin/jupyterhub -f /apps/jupyter/current/conf/jupyterhub_config.py
+
+[Install]
+WantedBy=multi-user.target

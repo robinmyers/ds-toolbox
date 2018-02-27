@@ -1,0 +1,6 @@
+---
+jupyter_home: '{{ jupyter_dir }}/current'
+jupyter_conf_dir: '{{ jupyter_home }}/conf'
+jupyter_key: '{{ jupyter_conf_dir }}/jupyter_key.pem'
+jupyter_csr: '{{ jupyter_conf_dir }}/jupyter.csr'
+jupyter_cert: '{{ jupyter_conf_dir }}/jupyter_cert.pem'

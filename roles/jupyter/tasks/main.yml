@@ -1,0 +1,68 @@
+---
+- name: Install notebook package from conda
+  conda_pkg:
+    name: notebook
+    path: '{{ conda_install_dir }}'
+
+- name: Install jupyterhub and jupyterlab packages from conda
+  conda_pkg:
+    name: '{{ item }}'
+    path: '{{ conda_install_dir }}'
+    channel: conda-forge
+  with_items:
+    - jupyterhub
+    - jupyterlab
+
+- name: Create jupyter directories
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+  with_items:
+    - '{{ jupyter_home }}/bin'
+    - '{{ jupyter_conf_dir }}'
+    - '{{ jupyter_home }}/log'
+
+- name: Install pyOpenSSL
+  apt: 
+    name: python-openssl
+    state: latest
+
+- name: Create an SSL private key
+  openssl_privatekey:
+    path: '{{ jupyter_key }}'
+  environment:
+    PATH: '{{ conda_home }}/bin'
+
+- name: Generate an OpenSSL CSR.
+  openssl_csr:
+    path: '{{ jupyter_csr }}'
+    privatekey_path: '{{ jupyter_key }}'
+    common_name: '{{ ansible_hostname }}'
+
+- name: Create an SSL certificate
+  openssl_certificate:
+    path: '{{ jupyter_cert }}'
+    privatekey_path: '{{ jupyter_key }}'
+    csr_path: '{{ jupyter_csr }}'
+    provider: selfsigned
+
+- name: Add Conda configuration file
+  template:
+    src: jupyterhub_config.py.j2
+    dest: '{{ jupyter_conf_dir }}/jupyterhub_config.py'
+
+- name: Add service file
+  template:
+    src: jupyterhub.service.j2
+    dest: '/etc/systemd/system/jupyterhub.service'
+  notify:
+    - reload jupyterhub
+
+- name: Enable jupyterhub service
+  service: 
+    name: jupyterhub
+    enabled: yes
+    state: started

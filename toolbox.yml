@@ -16,3 +16,7 @@
     - common
     - java
     - conda
+    - r
+    - rstudio
+    - node
+    - jupyter
