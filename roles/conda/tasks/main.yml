@@ -68,7 +68,7 @@
 - name: Create current link
   file:
     src: '{{ conda_install_dir }}'
-    dest: '{{ conda_dir }}/current'
+    dest: '{{ conda_home }}'
     state: link
     group: vagrant
     owner: vagrant

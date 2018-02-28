@@ -1,4 +1,5 @@
 ---
+conda_home: '{{ conda_dir }}/current'
 conda_platform: '{{ ansible_system }}-{{ ansible_machine }}'
 conda_name: '{{ conda_type }}{{ conda_python_version }}-{{ conda_version }}-{{ conda_platform }}'
 conda_script: '{{ conda_name }}.sh'

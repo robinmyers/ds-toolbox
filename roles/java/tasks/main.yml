@@ -39,7 +39,7 @@
 - name: Create current link
   file:
     src: '{{ java_path }}'
-    dest: '{{ java_dir }}/current'
+    dest: '{{ java_home }}'
     state: link
 
 - name: Add Java environment configuration file
