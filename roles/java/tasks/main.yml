@@ -1,10 +1,10 @@
 - name: Define java_package
   set_fact:
-    java_package: "{{ vars['java'][java.type]['package'] }}"
+    java_package: "{{ java[java_type].package }}"
 
 - name: Define java_path
   set_fact:
-    java_path: "{{ vars['java'][java.type]['path'] }}"
+    java_path: "{{ java[java_type].path }}"
 
 - block:
 
