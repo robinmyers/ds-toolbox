@@ -1,4 +1,4 @@
 ---
 java_dir: '{{ dst_app_dir }}/java'
-java_type: 'oracle' # 'openjdk'
+java_type: oracle # openjdk
 java_version: '8'

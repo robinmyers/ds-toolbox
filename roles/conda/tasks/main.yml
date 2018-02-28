@@ -34,7 +34,7 @@
 
 - name: Install packages into root environment
   conda_pkg:
-    name: 'ipython'
+    name: ipython
     path: '{{ conda_install_dir }}'
 
 - name: Create Conda environment
@@ -46,7 +46,7 @@
   conda_pkg:
     name: '{{ item }}'
     env: '{{ conda_env }}'
-    path:  '{{ conda_install_dir }}'
+    path: '{{ conda_install_dir }}'
   with_items: '{{ conda_pkgs }}'
 
 - name: Install pip packages in Conda environment

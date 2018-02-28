@@ -2,7 +2,7 @@
   apt: update_cache=yes cache_valid_time=3600
 
 - name: Install Dependencies
-  apt: name={{item}} state=latest
+  apt: name={{ item }} state=latest
   with_items:
     - git
     - vim
@@ -13,7 +13,7 @@
 
 - name: Create Application and Data Directories
   file: 
-    path: '{{item}}'
+    path: '{{ item }}'
     state: directory
     owner: vagrant
     group: vagrant

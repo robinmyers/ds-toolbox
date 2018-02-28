@@ -1,7 +1,7 @@
 - name: Download and Install RStudio Server
   apt:
     deb: '{{ rstudio_pkg_url }}'
-    state: 'present'
+    state: present
 
 - name: Create RStudio directories
   file:

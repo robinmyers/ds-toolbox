@@ -1,10 +1,10 @@
 - name: Define java_package
   set_fact:
-    java_package: "{{ java[java_type].package }}"
+    java_package: '{{ java[java_type].package }}'
 
 - name: Define java_path
   set_fact:
-    java_path: "{{ java[java_type].path }}"
+    java_path: '{{ java[java_type].path }}'
 
 - block:
 
@@ -17,9 +17,9 @@
     - name: Accept Oracle Java License
       debconf:
         name: '{{ java.oracle.package }}'
-        question: 'shared/accepted-oracle-license-v1-1'
-        vtype: 'select'
-        value: 'true'
+        question: shared/accepted-oracle-license-v1-1
+        vtype: select
+        value: true
 
   when: java.type == 'oracle'
 

@@ -1,10 +1,10 @@
 ---
 rstudio_home: '{{ rstudio_dir }}/current'
-rstudio_download_url: 'https://download2.rstudio.org'
+rstudio_download_url: https://download2.rstudio.org
 rstudio_architecture: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'i386' }}"
 rstudio_pkg: 'rstudio-server-{{ rstudio_version }}-{{ rstudio_architecture }}.deb'
 rstudio_pkg_url: '{{ rstudio_download_url }}/{{ rstudio_pkg }}'
-rstudio_bin_dir: '/usr/sbin'
-rstudio_conf_dir: '/etc/rstudio'
-rstudio_lib_dir: '/var/lib/rstudio-server'
-rstudio_log_dir: '/var/log/rstudio-server'
+rstudio_bin_dir: /usr/sbin
+rstudio_conf_dir: /etc/rstudio
+rstudio_lib_dir: /var/lib/rstudio-server
+rstudio_log_dir: /var/log/rstudio-server
