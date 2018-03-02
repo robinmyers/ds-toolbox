@@ -21,9 +21,9 @@
     group: vagrant
     mode: 0755
   with_items:
-    - '{{ jupyter_home }}/bin'
+    - '{{ jupyter_bin_dir }}'
     - '{{ jupyter_conf_dir }}'
-    - '{{ jupyter_home }}/log'
+    - '{{ jupyter_log_dir }}'
 
 - name: Install pyOpenSSL
   apt: 

@@ -1,6 +1,8 @@
 ---
 jupyter_home: '{{ jupyter_dir }}/current'
+jupyter_bin_dir: '{{ jupyter_home }}/bin'
 jupyter_conf_dir: '{{ jupyter_home }}/conf'
+jupyter_log_dir: '{{ jupyter_home }}/log'
 jupyter_key: '{{ jupyter_conf_dir }}/jupyter_key.pem'
 jupyter_csr: '{{ jupyter_conf_dir }}/jupyter.csr'
 jupyter_cert: '{{ jupyter_conf_dir }}/jupyter_cert.pem'
