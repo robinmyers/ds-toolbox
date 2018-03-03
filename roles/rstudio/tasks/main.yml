@@ -1,7 +1,13 @@
+- name: Check if RStudio is installed
+  command: dpkg-query -W rstudio-server
+  register: rstudio_installed
+  changed_when: false
+
 - name: Download and Install RStudio Server
   apt:
     deb: '{{ rstudio_pkg_url }}'
     state: present
+  when: rstudio_installed.rc == 1
 
 - name: Create RStudio directories
   file:
