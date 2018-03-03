@@ -1,0 +1,67 @@
+---
+
+- name: Check if Scala is installed
+  command: dpkg-query -W scala
+  register: scala_installed
+  changed_when: false
+
+- name: Download and Install Scala
+  apt:
+    deb: '{{ scala_pkg_url }}'
+    state: present
+  when: scala_installed.rc == 1
+
+- name: Create Scala directories
+  file:
+    path: '{{ scala_dir }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Create Scala link
+  file:
+    src: '{{ scala_install_dir }}'
+    dest: '{{ scala_home }}'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Add SBT apt repository
+  apt_repository:
+    repo: deb https://dl.bintray.com/sbt/debian /
+    state: present
+
+- name: Add SBT apt key
+  apt_key:
+    keyserver: hkp://keyserver.ubuntu.com:80
+    id: 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+    state: present
+
+- name: Install SBT
+  apt:
+    name: sbt
+    state: present
+    update_cache: yes
+
+
+- name: Create SBT directories
+  file:
+    path: '{{ sbt_dir }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Create SBT link
+  file:
+    src: '{{ sbt_install_dir }}'
+    dest: '{{ sbt_home }}'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Add Scala environment configuration file
+  template:
+    src: env-scala.sh.j2
+    dest: /etc/profile.d/env-scala.sh

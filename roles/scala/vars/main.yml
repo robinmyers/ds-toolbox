@@ -1,0 +1,6 @@
+scala_home: '{{ scala_dir }}/current'
+scala_pkg: 'scala-{{ scala_version }}.deb'
+scala_pkg_url: 'http://scala-lang.org/files/archive/{{ scala_pkg }}'
+scala_install_dir: '/usr/share/scala'
+sbt_home: '{{ sbt_dir }}/current'
+sbt_install_dir: '/usr/share/sbt'
