@@ -1,29 +1,37 @@
 ---
-- debug: var=hadoop_download_url
+- name: Check if hadoop is installed
+  stat:
+    path: '{{ hadoop_install_dir }}/bin/hadoop'
+  register: hadoop_installed
+  change_when: false
 
-- name: Download Hadoop binary
-  get_url:
-    url: '{{ hadoop_download_url }}'
-    dest: '/tmp/{{ hadoop_path }}.tar.gz'
+- block:
 
-- name: Create Hadoop directory
-  file:
-    path: '{{ hadoop_dir }}'
-    state: directory
-    owner: vagrant
-    group: vagrant
-    mode: 0755
+    - name: Download Hadoop binary
+      get_url:
+        url: '{{ hadoop_download_url }}'
+        dest: '/tmp/{{ hadoop_path }}.tar.gz'
+
+    - name: Create Hadoop directory
+      file:
+        path: '{{ hadoop_dir }}'
+        state: directory
+        owner: vagrant
+        group: vagrant
+        mode: 0755
 
 
-- name: Unarchive Hadoop
-  unarchive:
-    src: '/tmp/{{ hadoop_path }}.tar.gz'
-    dest: '{{ hadoop_dir }}'
-    creates: '{{ hadoop_install_dir }}'
-    copy: no
-    owner: vagrant
-    group: vagrant
-    mode: 0755
+    - name: Unarchive Hadoop
+      unarchive:
+        src: '/tmp/{{ hadoop_path }}.tar.gz'
+        dest: '{{ hadoop_dir }}'
+        creates: '{{ hadoop_install_dir }}'
+        copy: no
+        owner: vagrant
+        group: vagrant
+        mode: 0755
+
+  when: not hadoop_installed.stat.exists
 
 - name: Create current link
   file:
