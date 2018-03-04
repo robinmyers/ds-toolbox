@@ -1,0 +1,55 @@
+---
+- name: Check if Spark is installed
+  stat:
+    path: '{{ spark_install_dir }}/bin/hadoop'
+  register: spark_installed
+  change_when: false
+
+- block:
+
+    - name: Create Spark directory
+      file:
+        path: '{{ spark_dir }}'
+        state: directory
+        owner: vagrant
+        group: vagrant
+        mode: 0755
+
+    - name: Unarchive Spark
+      unarchive:
+        src: '{{ spark_download_url }}'
+        dest: '{{ spark_dir }}'
+        creates: '{{ spark_install_dir }}'
+        copy: no
+        owner: vagrant
+        group: vagrant
+        mode: 0755
+
+  when: not spark_installed.stat.exists
+
+- name: Create current link
+  file:
+    src: '{{ spark_install_dir }}'
+    dest: '{{ spark_home }}'
+    state: link
+    group: vagrant
+    owner: vagrant
+
+- name: Add Spark environment configuration file
+  template:
+    src: env-spark.sh.j2
+    dest: /etc/profile.d/env-spark.sh
+
+- name: Add spark environment file
+  template:
+    src: spark-env.sh.j2
+    dest: '{{ spark_home }}/conf/spark-env.sh'
+    owner: vagrant
+    group: vagrant
+
+- name: Add spark log configuration file
+  template:
+    src: log4j.properties.j2
+    dest: '{{ spark_home }}/conf/log4j.properties'
+    owner: vagrant
+    group: vagrant

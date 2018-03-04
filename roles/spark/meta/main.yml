@@ -1,0 +1,6 @@
+---
+dependencies:
+  - { role: common }
+  - { role: java }
+  - { role: scala }
+  - { role: hadoop }

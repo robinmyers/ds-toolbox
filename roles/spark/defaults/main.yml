@@ -1,0 +1,8 @@
+---
+spark_dir: '{{ dst_app_dir }}/spark'
+spark_version: '2.2.1'
+spark_with_hadoop: false
+spark_hadoop_version: null # '2.7'
+spark_mirror: 'mirrors.sonic.net/apache'
+spark_worker_memory: '2g'
+spark_log_level: 'ERROR'
