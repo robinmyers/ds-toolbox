@@ -3,4 +3,4 @@ spark_home: '{{ spark_dir }}/current'
 spark_base: 'spark-{{ spark_version }}'
 spark_bin: "{{ spark_base }}-bin-{{ 'hadoop' if spark_with_hadoop else 'without-hadoop' }}{{ spark_hadoop_version }}"
 spark_install_dir: '{{ spark_dir }}/{{ spark_bin }}'
-spark_download_url: 'http://{{ spark_mirror }}/spark/{{ spark_base }}/{{ spark_bin }}.tgz'
+spark_download_url: 'http://{{ dst_apache_mirror }}/spark/{{ spark_base }}/{{ spark_bin }}.tgz'

@@ -2,4 +2,4 @@
 hadoop_home: '{{ hadoop_dir }}/current'
 hadoop_path: 'hadoop-{{ hadoop_version }}'
 hadoop_install_dir: '{{ hadoop_dir }}/{{ hadoop_path }}'
-hadoop_download_url: 'http://{{ hadoop_mirror }}/hadoop/common/{{ hadoop_path }}/{{ hadoop_path }}.tar.gz'
+hadoop_download_url: 'http://{{ dst_apache_mirror }}/hadoop/common/{{ hadoop_path }}/{{ hadoop_path }}.tar.gz'
