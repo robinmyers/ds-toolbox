@@ -1,0 +1,7 @@
+---
+mongo_dir: '{{ dst_app_dir }}/mongo'
+mongo_version: '3.6'
+mongo_ip: 127.0.0.1
+mongo_port: 27017
+mongo_db_dir: '{{ dst_data_dir }}/mongodb'
+mongo_log_dir: /var/log/mongodb

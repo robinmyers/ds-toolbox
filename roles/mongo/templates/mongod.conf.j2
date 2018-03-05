@@ -1,0 +1,17 @@
+systemLog:
+  destination: file
+  path: "{{ mongo_log_file }}"
+  logAppend: true
+
+storage:
+  dbPath: {{ mongo_db_dir }}
+  journal:
+    enabled: true
+
+processManagement:
+  fork: true
+  pidFilePath: "{{ mongo_pid_file }}"
+
+net:
+  bindIp: {{ mongo_ip }}
+  port: {{ mongo_port }}

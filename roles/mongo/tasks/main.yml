@@ -1,0 +1,100 @@
+---
+- name: Add MongoDB apt ket
+  apt_key:
+    id: '{{ mongo_apt_key[mongo_version] }}'
+    keyserver: '{{ mongo_keyserver }}'
+
+- name: Add MongoDB apt repository
+  apt_repository:
+    repo: '{{ mongo_repository }}'
+    update_cache: yes
+
+- name: Install MongoDB
+  apt:
+    name: '{{ mongo_package }}'
+    state: present
+
+- name: Create MongoDB dirs
+  file:
+    path: '{{ item }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+  with_items:
+    - '{{ mongo_home }}/bin'
+    - '{{ mongo_home }}/conf'
+
+- name: Link MongoDB binaries to bin directory
+  file:
+    src: '/usr/bin/{{ item }}'
+    dest: '{{ mongo_home }}/bin/{{ item }}'
+    state: link
+  with_items:
+    - mongo
+    - '{{ mongo_service }}'
+
+- name: Create MongoDB data directory
+  file:
+    path: '{{ mongo_db_dir }}'
+    state: directory
+    owner: '{{ mongo_user }}'
+    group: '{{ mongo_user }}'
+    mode: 0755
+
+- name: Create MongoDB pid dir
+  file:
+    path: '{{ mongo_pid_file | dirname }}'
+    state: directory
+    owner: '{{ mongo_user }}'
+    group: '{{ mongo_user }}'
+    mode: 0755
+
+- name: Create MongoDB log dir
+  file:
+    state: directory
+    recurse: yes
+    path: '{{ mongo_log_dir }}'
+    owner: '{{ mongo_user }}'
+    group: '{{ mongo_user }}'
+    mode: 0755
+
+- name: Link MongoDB log directory
+  file:
+    src: '{{ mongo_log_dir }}'
+    dest: '{{ mongo_home }}/log'
+    state: link
+
+- name: Copy MongoDB config file
+  template:
+    src: mongod.conf.j2
+    dest: /etc/mongod.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart mongod
+
+- name: Copy MongoDB log rotation config file
+  template:
+    src: logrotate.conf.j2
+    dest: /etc/logrotate.d/mongodb
+  notify: restart mongod
+
+- name: Link MongoDB config file
+  file:
+    src: /etc/mongod.conf
+    dest: '{{ mongo_home }}/conf/mongod.conf'
+    state: link
+
+- name: Link MongoDB logrotate config file
+  file:
+    src: /etc/logrotate.d/mongodb
+    dest: '{{ mongo_home }}/conf/logrotate.conf'
+    state: link
+
+
+- name: Ensure MongoDB service is started
+  service:
+    name: '{{ mongo_service }}'
+    state: started
+    enabled: yes

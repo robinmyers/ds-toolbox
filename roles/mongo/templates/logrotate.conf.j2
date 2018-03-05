@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+
+{{ mongo_log_file }} {
+	compress
+	copytruncate
+	daily
+	dateext
+	rotate 7
+	size 10M
+}

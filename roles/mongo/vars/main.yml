@@ -1,0 +1,13 @@
+---
+mongo_home: '{{ mongo_dir }}/current'
+mongo_package: 'mongodb-org'
+mongo_keyserver: keyserver.ubuntu.com
+mongo_apt_key:
+  '3.2': EA312927
+  '3.4': 0C49F3730359A14518585931BC711F9BA15703C6
+  '3.6': 2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5
+mongo_repository: deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu {{ ansible_lsb.codename }}/{{ mongo_package }}/{{ mongo_version }} multiverse
+mongo_user: 'mongodb'
+mongo_service: 'mongod'
+mongo_log_file: '{{ mongo_log_dir }}/{{ mongo_service }}.log'
+mongo_pid_file: '/var/run/mongodb/mongod.pid'
