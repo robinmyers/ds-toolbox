@@ -1,0 +1,118 @@
+---
+- name: Install PostgreSQL
+  apt:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - postgresql
+    - postgresql-contrib
+    - libpq-dev
+    - python-psycopg2
+
+- name: Create PostgreSQL directory
+  file:
+    path: '{{ postgres_home }}'
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0755
+
+- name: Link PostgreSQL bin directory
+  file:
+    src: '{{ postgres_bin_dir }}'
+    dest: '{{ postgres_home }}/bin'
+    state: link
+
+- name: Ensure PostgreSQL data directory exists
+  file:
+    path: '{{ postgres_data_dir }}'
+    owner: '{{ postgres_service_user }}'
+    group: '{{ postgres_service_group }}'
+    state: directory
+    mode: 0700
+
+- name: Link PostgreSQL data directory
+  file:
+    src: '{{ postgres_data_dir }}'
+    dest: '{{ item }}'
+    state: link
+  with_items:
+    - '{{ postgres_home }}/data'
+    - '{{ dst_data_dir }}/postgres'
+
+- name: Ensure PostgreSQL config directory exists
+  file:
+    path: '{{ postgres_conf_dir }}'
+    owner: '{{ postgres_service_user }}'
+    group: '{{ postgres_service_group }}'
+    state: directory
+    mode: 0700
+
+- name: Link PostgreSQL conf directory
+  file:
+    src: '{{ postgres_conf_dir }}'
+    dest: '{{ postgres_home }}/conf'
+    state: link
+
+- name: Check if PostgreSQL database is initialized.
+  stat:
+    path: "{{ postgres_data_dir }}/PG_VERSION"
+  register: postgres_db_initialized
+
+- name: Initialize PostgreSQL database
+  command: "{{ postgres_bin_dir }}/initdb -D {{ postgres_data_dir }}"
+  when: not postgres_db_initialized.stat.exists
+  become: yes
+  become_user: "{{ postgres_service_user }}"
+
+- name: Add PostgreSQL global config file
+  template:
+    src: postgresql.conf.j2
+    dest: '{{ postgres_conf_dir }}/postgresql.conf'
+    owner: '{{ postgres_service_user }}'
+    group: '{{ postgres_service_group }}'
+    mode: 0600
+  notify: restart postgres
+
+- name: Add PostgreSQL authentication
+  template:
+    src: pg_hba.conf.j2
+    dest: '{{ postgres_conf_dir }}/pg_hba.conf'
+    owner: '{{ postgres_service_user }}'
+    group: '{{ postgres_service_group }}'
+    mode: 0600
+  notify: restart postgres
+
+- name: Ensure the PostgreSQL service is running
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Create PostgreSQL user database
+  postgresql_db:
+    name: '{{ postgres_user }}'
+    login_user: '{{ postgres_service_user }}'
+    state: present
+  become: yes
+  become_user: '{{ postgres_service_user }}'
+
+- name: Create PostgreSQL user
+  postgresql_user:
+    name: '{{ postgres_user }}'
+    password: '{{ postgres_user_password|default(omit) }}'
+    priv: '{{ postgres_user_priv|default(omit) }}'
+    db: '{{ postgres_user }}'
+    login_user: '{{ postgres_service_user }}'
+    state: present
+  no_log: true
+  become: yes
+  become_user: '{{ postgres_service_user }}'
+
+
+
+- name: Add PostgresQL environment configuration file
+  template:
+    src: env-postgres.sh.j2
+    dest: /etc/profile.d/env-postgres.sh
+
