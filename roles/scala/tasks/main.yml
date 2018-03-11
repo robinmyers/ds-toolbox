@@ -1,5 +1,4 @@
 ---
-
 - name: Check if Scala is installed
   command: dpkg-query -W scala
   register: scala_installed

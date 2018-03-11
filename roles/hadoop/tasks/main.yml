@@ -3,7 +3,7 @@
   stat:
     path: '{{ hadoop_install_dir }}/bin/hadoop'
   register: hadoop_installed
-  change_when: false
+  changed_when: false
 
 - block:
 
