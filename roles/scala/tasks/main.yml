@@ -3,6 +3,7 @@
   command: dpkg-query -W scala
   register: scala_installed
   changed_when: false
+  failed_when: false
 
 - name: Download and Install Scala
   apt:
