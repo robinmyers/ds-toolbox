@@ -2,6 +2,7 @@
   command: dpkg-query -W rstudio-server
   register: rstudio_installed
   changed_when: false
+  failed_when: false
 
 - name: Download and Install RStudio Server
   apt:
