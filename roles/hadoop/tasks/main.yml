@@ -33,6 +33,12 @@
 
   when: not hadoop_installed.stat.exists
 
+- name: Remove Hadoop binary
+  file:
+    path: '/tmp/{{ hadoop_path }}.tar.gz'
+    state: absent
+
+
 - name: Create current link
   file:
     src: '{{ hadoop_install_dir }}'
