@@ -11,8 +11,8 @@
       file:
         path: '{{ spark_dir }}'
         state: directory
-        owner: vagrant
-        group: vagrant
+        owner: '{{ dst_user }}'
+        group: '{{ dst_group }}'
         mode: 0755
 
     - name: Unarchive Spark
@@ -21,8 +21,8 @@
         dest: '{{ spark_dir }}'
         creates: '{{ spark_install_dir }}'
         copy: no
-        owner: vagrant
-        group: vagrant
+        owner: '{{ dst_user }}'
+        group: '{{ dst_group }}'
         mode: 0755
 
   when: not spark_installed.stat.exists
@@ -32,8 +32,8 @@
     src: '{{ spark_install_dir }}'
     dest: '{{ spark_home }}'
     state: link
-    group: vagrant
-    owner: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
 
 - name: Add Spark environment configuration file
   template:
@@ -44,12 +44,12 @@
   template:
     src: spark-env.sh.j2
     dest: '{{ spark_home }}/conf/spark-env.sh'
-    owner: vagrant
-    group: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
 
 - name: Add spark log configuration file
   template:
     src: log4j.properties.j2
     dest: '{{ spark_home }}/conf/log4j.properties'
-    owner: vagrant
-    group: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'

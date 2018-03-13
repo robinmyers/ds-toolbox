@@ -18,8 +18,8 @@
   file:
     path: '{{ item }}'
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
     mode: 0755
   with_items:
     - '{{ mongo_home }}/bin'
@@ -91,7 +91,6 @@
     src: /etc/logrotate.d/mongodb
     dest: '{{ mongo_home }}/conf/logrotate.conf'
     state: link
-
 
 - name: Ensure MongoDB service is started
   service:

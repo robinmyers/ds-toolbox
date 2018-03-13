@@ -4,8 +4,8 @@ postgres_version: '9.5'
 postgres_service_user: postgres
 postgres_service_group: postgres
 postgres_port: '5432'
-postgres_user: vagrant
-postgres_user_password: vagrant
+postgres_user: '{{ dst_user }}'
+postgres_user_password: '{{ dst_user }}'
 postgres_user_priv: ALL
 postgres_hba_conf:
   - { type: 'local', database: 'all', user: '{{ postgres_service_user }}', method: 'peer', comment: 'Database administrative login by Unix domain socket' }

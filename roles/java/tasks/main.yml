@@ -32,8 +32,8 @@
   file:
     path: '{{ java_dir }}'
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
     mode: 0755
 
 - name: Create current link

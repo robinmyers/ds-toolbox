@@ -15,8 +15,8 @@
   file:
     path: '{{ scala_dir }}'
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
     mode: 0755
 
 - name: Create Scala link
@@ -24,8 +24,8 @@
     src: '{{ scala_install_dir }}'
     dest: '{{ scala_home }}'
     state: link
-    group: vagrant
-    owner: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
 
 - name: Add SBT apt repository
   apt_repository:
@@ -44,13 +44,12 @@
     state: present
     update_cache: yes
 
-
 - name: Create SBT directories
   file:
     path: '{{ sbt_dir }}'
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
     mode: 0755
 
 - name: Create SBT link
@@ -58,8 +57,8 @@
     src: '{{ sbt_install_dir }}'
     dest: '{{ sbt_home }}'
     state: link
-    group: vagrant
-    owner: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
 
 - name: Add Scala environment configuration file
   template:

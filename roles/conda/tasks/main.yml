@@ -16,8 +16,8 @@
       file:
         path: '{{ conda_dir }}'
         state: directory
-        owner: vagrant
-        group: vagrant
+        owner: '{{ dst_user }}'
+        group: '{{ dst_group }}'
         mode: 0755
 
     - name: Install Conda
@@ -60,8 +60,8 @@
   file:
     path: '{{ conda_install_dir }}'
     state: directory
-    owner: vagrant
-    group: vagrant
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
     recurse: yes
     mode: 0755
 
@@ -70,11 +70,10 @@
     src: '{{ conda_install_dir }}'
     dest: '{{ conda_home }}'
     state: link
-    group: vagrant
-    owner: vagrant
-
+    owner: '{{ dst_user }}'
+    group: '{{ dst_group }}'
+    
 - name: Add Conda environment configuration file
   template:
     src: env-conda.sh.j2
     dest: /etc/profile.d/env-conda.sh
-
