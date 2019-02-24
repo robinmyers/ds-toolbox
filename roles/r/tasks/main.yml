@@ -5,7 +5,7 @@
 
 - name: Add R apt repository
   apt_repository:
-    repo: deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu {{ ansible_lsb.codename }}/
+    repo: deb [arch=amd64,i386] https://cran.rstudio.com/bin/linux/ubuntu {{ ansible_lsb.codename }}-cran35/
     state: present
 
 - name: Install R

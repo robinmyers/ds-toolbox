@@ -1,5 +1,5 @@
 dst_app_dir: '/apps'
 dst_data_dir: '/data'
 dst_apache_mirror: 'mirrors.sonic.net/apache'
-dst_user: 'vagrant'
-dst_group: 'vagrant'
+dst_user: 'robin'
+dst_group: 'robin'

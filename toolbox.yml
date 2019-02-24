@@ -18,10 +18,10 @@
     - conda
     - r
     - rstudio
-    - node
+      #- node
     - jupyter
     - hadoop
     - scala
     - spark
-    - mongo
-    - postgres
+      #- mongo
+      #- postgres

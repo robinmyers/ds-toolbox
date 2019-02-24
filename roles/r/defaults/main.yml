@@ -3,3 +3,5 @@ r_dir: '{{ dst_app_dir }}/R'
 r_cran: https://cran.rstudio.com
 r_pkgs:
   - tidyverse
+  - RSQLite
+  - googlesheets

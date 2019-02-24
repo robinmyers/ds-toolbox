@@ -4,5 +4,9 @@
     name: '{{ item }}'
     state: latest
   with_items:
-    - nodejs-legacy
+    #- nodejs-legacy
+    - nodejs
+    - libssl1.0-dev
+    - nodejs-dev
+    - node-gyp
     - npm

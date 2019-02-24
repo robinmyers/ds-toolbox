@@ -1,5 +1,5 @@
 ---
 rstudio_dir: '{{ dst_app_dir }}/rstudio'
-rstudio_version: '1.1.423'
+rstudio_version: '1.1.456'
 rstudio_url: '0.0.0.0'
 rstudio_port: '8787'

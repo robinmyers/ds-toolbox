@@ -29,7 +29,7 @@
 
 - name: Add SBT apt repository
   apt_repository:
-    repo: deb https://dl.bintray.com/sbt/debian /
+    repo: "deb https://dl.bintray.com/sbt/debian /"
     state: present
 
 - name: Add SBT apt key
